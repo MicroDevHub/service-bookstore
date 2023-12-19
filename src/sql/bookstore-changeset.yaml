@@ -1,0 +1,11 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Kiet Tran
+    changes:
+    - sqlFile:
+        dbms: postgresql
+        path: ./tables/category.sql
+    - sqlFile:
+        dbms: postgresql
+        path: ./tables/book.sql
