@@ -1,0 +1,23 @@
+{
+  "name": "service-bookstore",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MicroDevHub/service-bookstore.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MicroDevHub/service-bookstore/issues"
+  },
+  "homepage": "https://github.com/MicroDevHub/service-bookstore#readme",
+  "dependencies": {
+    "typescript": "^5.3.3"
+  }
+}
