@@ -1,6 +1,6 @@
 databaseChangeLog:
 - changeSet:
-    id: 1
+    id: Create table book and category
     author: Kiet Tran
     changes:
     - sqlFile:
@@ -9,3 +9,13 @@ databaseChangeLog:
     - sqlFile:
         dbms: postgresql
         path: ./tables/book.sql
+- changeSet:
+    id: Initialize data for book and category table
+    author: Kiet Tran
+    changes:
+    - sqlFile:
+        dbms: postgresql
+        path: ./data/category-initial-data.sql
+    - sqlFile:
+        dbms: postgresql
+        path: ./data/book-initial-data.sql

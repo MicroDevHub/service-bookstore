@@ -1,4 +1,4 @@
 CREATE TABLE Categories(
-    "id" int PRIMARY KEY,
+    "id" SERIAL PRIMARY KEY,
     "name" text NOT NULL
 )
