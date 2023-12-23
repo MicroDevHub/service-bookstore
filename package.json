@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "nodemon index.ts",
+    "build": "tsc -p .",
+    "start:prod": "node --env-file=.env ./build/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
