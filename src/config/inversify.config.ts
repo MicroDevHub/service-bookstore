@@ -19,4 +19,5 @@ DiContainer.bind<ILogger>(TYPES.ILogger)
     .toDynamicValue((context: interfaces.Context) => { return new LoggerFactory().logger })
 DiContainer.bind<PrismaClient>(TYPES.PrismaClient)
     .toDynamicValue((context: interfaces.Context) => { return new PrismaClient() })
+
 export default DiContainer;
