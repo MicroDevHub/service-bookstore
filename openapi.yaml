@@ -1,0 +1,486 @@
+openapi: 3.1.0
+info:
+  title: Swagger Bookstore
+  version: 1.0.11
+tags:
+- name: Book
+  description: Book in the bookstore
+- name: Category
+  description: Category of book
+- name: Cart
+  description: Operations about cart
+paths:
+  /books:
+    get:
+      tags:
+      - Book
+      summary: Get all book
+      description: Get all book of store
+      operationId: getBook
+      parameters:
+      - name: categoryID
+        in: query
+        description: Get book list by categoryId
+        required: false
+        schema:
+          type: string
+      - name: search
+        in: query
+        description: Get book list by search title
+        required: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: limit the amount of book
+        required: false
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: Get book list by page
+        required: false
+        schema:
+          type: integer
+      - name: sortOrder
+        in: query
+        description: sort book by asc/desc
+        required: false
+        schema:
+          type: integer
+      - name: sortColumn
+        in: query
+        description: sort by column
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+      - Book
+      summary: Create a new book
+      description: 'Create a new book'
+      requestBody:
+        description: Create an new book
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreateUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal Server Error
+  /books/{id}:
+    get:
+      tags:
+      - Book
+      summary: Get book by id
+      description: Get book by id
+      parameters:
+      - name: id
+        in: path
+        description: book id
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid ID
+        '404':
+          description: Book not found
+        '500':
+          description: Internal Server Error
+    put:
+      tags:
+      - Book
+      summary: Update an existing book
+      description: Update an existing book by Id
+      parameters:
+      - name: id
+        in: path
+        description: book id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update an existent book in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreateUpdate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Invalid Id
+        '404':
+          description: Book not found
+        '500':
+          description: Internal Server Error
+    delete:
+      tags:
+      - Book
+      summary: Delete a book
+      description: Delete a book
+      parameters:
+      - name: id
+        in: path
+        description: book id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '400':
+          description: Invalid Id
+        '404':
+          description: Book not found
+  /categories:
+    get:
+      tags:
+      - Category
+      summary: Get all categories
+      description: Get all categories of store
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+        '500':
+          description: Internal Server Error
+  /cart:
+    get:
+      tags:
+      - Cart
+      summary: Get cart
+      description: Get cart of user
+      operationId: getCart
+      parameters:
+      - name: email
+        in: query
+        description: email of user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cart'
+        '500':
+          description: Internal Server Error
+    post:
+      tags:
+      - Cart
+      summary: Add to cart
+      description: 'Add to cart'
+      requestBody:
+        description: Add to cart
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CartCreate'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '500':
+          description: Internal Server Error
+  /cart/{id}:
+    put:
+      tags:
+      - Cart
+      summary: Update quantity for item in cart
+      description: Update quantity for item in cart
+      parameters:
+      - name: id
+        in: path
+        description: cart id
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Update quantity of cart item
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                quantity:
+                  type: number
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cart'
+        '400':
+          description: Invalid Id
+        '404':
+          description: Cart Item not found
+        '500':
+          description: Internal Server Error
+    delete:
+      tags:
+      - Cart
+      summary: Delete item from cart
+      description: Delete item from cart
+      parameters:
+      - name: id
+        in: path
+        description: cart id to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        '400':
+          description: Invalid Id
+        '404':
+          description: Cart Item not found
+  /cart/checkout:
+    post:
+      tags:
+      - Cart
+      summary: checkout
+      description: 'Checkout'
+      parameters:
+      - name: email
+        in: query
+        description: email of user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal Server Error
+  /cart/clear:
+    delete:
+      tags:
+      - Cart
+      summary: Clear Cart
+      description: 'Clear Cart'
+      parameters:
+      - name: email
+        in: query
+        description: email of user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal Server Error
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '649b98e6b2b0c5d6a762a13e'
+        title:
+          type: string
+          example: 'title'
+        image:
+          type: string
+          example: 'image'
+        quantity:
+          type: integer
+          format: int32
+          example: 1
+        price:
+          type: integer
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: 'description'
+        author:
+          type: string
+          example: 'author'
+        category:
+          $ref: '#/components/schemas/Category'
+          example:
+        isDelete:
+          type: boolean
+          example: true
+      xml:
+        name: book
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '1wqer23423'
+        name:
+          type: string
+          example: 'Drama'
+      xml:
+        name: category
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+    Cart:
+      type: object
+      properties:
+        id:
+          type: string
+          example: '649b98e6b2b0c5d6a762a13e'
+        productId:
+          type: string
+          example: '649b98e6b2b0c5d6a762a13e'
+        productImage:
+          type: string
+          example: 'image'
+        name:
+          type: string
+          example: 'name'
+        quantity:
+          type: integer
+          format: int32
+          example: 1
+        price:
+          type: integer
+          format: int32
+          example: 1
+      xml:
+        name: cart
+    BookCreateUpdate:
+      type: object
+      required:
+      - title
+      - description
+      - image
+      - category
+      - quantity
+      - price
+      - categoryId
+      properties:
+        title:
+          type: string
+          example: 'title'
+        image:
+          type: string
+          example: 'image'
+        quantity:
+          type: integer
+          format: int32
+          example: 1
+        price:
+          type: integer
+          format: int32
+          example: 1
+        description:
+          type: string
+          example: 'description'
+        author:
+          type: string
+          example: 'author'
+        categoryId:
+          type: number
+          example: 1
+      xml:
+        name: book
+    CartCreate:
+      type: object
+      required:
+      - product
+      - quantity
+      - user
+      properties:
+        product:
+          type: string
+          example: 'product'
+        quantity:
+          type: integer
+          format: int32
+          example: 1
+        user:
+          type: string
+          example: 'user'
+      xml:
+        name: cart
+  requestBodies:
+    BookCreateUpdate:
+      description: Pet object that needs to be added to the store
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BookCreateUpdate'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/BookCreateUpdate'
+  securitySchemes:
+    bookstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
