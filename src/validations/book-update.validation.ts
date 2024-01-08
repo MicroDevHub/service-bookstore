@@ -34,7 +34,7 @@ export const bookUpdateValidation: Schema = {
     in: ['body'],
     notEmpty: true,
   },
-  category: {
+  categoryId: {
     in: ['body'],
     notEmpty: true,
   },

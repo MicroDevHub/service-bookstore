@@ -4,5 +4,6 @@ export const bookGetByIdValidation: Schema = {
   id: {
     in: ['params'],
     notEmpty: true,
+    isInt: true
   },
 };

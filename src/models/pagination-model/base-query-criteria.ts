@@ -1,5 +1,5 @@
 export enum ORDER {
-  ASC = "asc",
+  ASC = 'asc',
   DESC = 'desc',
 }
 

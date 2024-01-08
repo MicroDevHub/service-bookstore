@@ -4,5 +4,6 @@ export const bookDeleteValidation: Schema = {
   id: {
     in: ['params'],
     notEmpty: true,
+    isInt: true
   },
 };

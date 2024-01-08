@@ -4,6 +4,7 @@ const TYPES = {
   ILogger: Symbol('ILogger'),
   ILoggerFactory: Symbol('ILoggerFactory'),
   PrismaClient: Symbol('PrismaClient'),
+  DatabaseConnection: Symbol('DatabaseConnection'),
 };
 
 export default TYPES;

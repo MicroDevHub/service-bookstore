@@ -18,7 +18,7 @@ export const bookPagingValidation: Schema = {
   },
   sortOrder: {
     in: ['query'],
-    isInt: true,
+    isString: true,
     optional: true,
   },
   sortColumn: {
