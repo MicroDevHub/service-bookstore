@@ -46,7 +46,7 @@ export class BookController {
 				search: search ?? '',
 				limit: limit ? Number(limit) : 12,
 				page: page ? Number(page) : 1,
-				sortOrder: Number(sortOrder) === 0 ? ORDER.ASC : ORDER.DESC,
+				sortOrder: sortOrder && sortOrder === ORDER.ASC ? ORDER.ASC : ORDER.DESC,
 				sortColumn: sortColumn ?? 'id',
 				categoryId: categoryId,
 			} as BookQueryCriteria;

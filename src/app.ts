@@ -4,7 +4,7 @@ import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yaml';
 import { checkSchema } from 'express-validator';
-import { errorHandler, validateRequest } from '@hh-bookstore/common';
+import { NotFoundError, errorHandler, validateRequest } from '@hh-bookstore/common';
 
 import { BookController, CategoryController } from './controllers';
 import DiContainer from './config/inversify.config';
@@ -19,17 +19,13 @@ import {
 const file = fs.readFileSync('openapi.yaml', 'utf8');
 const swaggerDocument = YAML.parse(file);
 
-const bookController = DiContainer.resolve<BookController>(BookController);
-const categoryController =
-  DiContainer.resolve<CategoryController>(CategoryController);
-
 class App {
   public express: express.Application;
 
   constructor() {
     this.express = express();
-    this.middleware();
     this.routes();
+    this.middleware();
   }
 
   private middleware(): void {
@@ -40,6 +36,9 @@ class App {
   }
 
   private routes(): void {
+    const bookController = DiContainer.resolve<BookController>(BookController);
+    const categoryController = DiContainer.resolve<CategoryController>(CategoryController);
+
     const router = express.Router();
 
     router.get(
@@ -65,7 +64,7 @@ class App {
       bookController.createBook.bind(bookController),
     );
     router.put(
-      '/books',
+      '/books/:id',
       checkSchema(bookUpdateValidation),
       validateRequest,
       bookController.updateBook.bind(bookController),
@@ -83,6 +82,9 @@ class App {
       swaggerUi.serve,
       swaggerUi.setup(swaggerDocument),
     );
+    this.express.all('*', () => {
+      throw new NotFoundError()
+    })
   }
 }
 

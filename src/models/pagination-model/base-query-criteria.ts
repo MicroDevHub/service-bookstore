@@ -1,8 +1,7 @@
 export enum ORDER {
-  ASC = "asc",
+  ASC = 'asc',
   DESC = 'desc',
 }
-
 export default interface BaseQueryCriteria {
   search?: string;
   limit: number;

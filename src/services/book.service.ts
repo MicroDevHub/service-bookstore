@@ -23,7 +23,7 @@ export class BookService implements IBookService {
 		};
 
 		if (query.search) {
-			filter.title = { contains: query.search };
+			filter.title = { contains: query.search, mode: 'insensitive' };
 		}
 
 		if (query.categoryId) {
@@ -63,10 +63,10 @@ export class BookService implements IBookService {
 					price: book.price,
 					description: book.description,
 					author: book.author,
-					category: book.categories
-				} as BookModel
-			})
-		}
+					category: book.categories,
+				} as BookModel;
+			}),
+		};
 
 		return pagedResponseModel;
 	}
@@ -74,8 +74,8 @@ export class BookService implements IBookService {
 	async get(): Promise<BookModel[]> {
 		const books = await this.prismaClient.books.findMany({
 			include: {
-				categories: true
-			}
+				categories: true,
+			},
 		});
 		return books.map((book) => {
 			return {
@@ -85,15 +85,15 @@ export class BookService implements IBookService {
 				price: book.price,
 				description: book.description,
 				author: book.author,
-				category: book.categories
-			} as BookModel
+				category: book.categories,
+			} as BookModel;
 		});
 	}
 
 	async getById(id: number): Promise<BookModel> {
 		const book = await this.prismaClient.books.findFirst({
 			include: {
-				categories: true
+				categories: true,
 			},
 			where: { id: id },
 		});
@@ -102,14 +102,15 @@ export class BookService implements IBookService {
 		}
 
 		const bookDto: BookModel = {
+			id: book.id,
 			title: book.title,
 			image: book.image,
 			quantity: book.quantity,
 			price: book.price,
 			description: book.description,
 			author: book.author,
-			category: book.categories
-		}
+			category: book.categories,
+		};
 
 		return bookDto;
 	}
@@ -117,7 +118,7 @@ export class BookService implements IBookService {
 	async createBook(bookCreateDto: BookCreateUpdateDto): Promise<BookModel> {
 		const categoryRef = await this.prismaClient.categories.findUnique({
 			where: {
-				id: bookCreateDto.categoryId
+				id: bookCreateDto.categoryId,
 			},
 		});
 		if (!categoryRef) {
@@ -137,6 +138,7 @@ export class BookService implements IBookService {
 		});
 
 		const bookDto: BookModel = {
+			id: book.id,
 			title: book.title,
 			image: book.image,
 			quantity: book.quantity,
@@ -179,11 +181,12 @@ export class BookService implements IBookService {
 				quantity: bookUpdateDto.quantity,
 				price: bookUpdateDto.price,
 				category_id: bookUpdateDto.categoryId,
-				updated_date: new Date()
+				updated_date: new Date(),
 			},
 		});
 
 		const bookDto: BookModel = {
+			id: updatedBook.id,
 			title: updatedBook.title,
 			image: updatedBook.image,
 			quantity: updatedBook.quantity,

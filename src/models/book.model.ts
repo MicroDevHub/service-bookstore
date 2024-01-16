@@ -2,6 +2,7 @@ import BaseQueryCriteria from './pagination-model/base-query-criteria';
 import { ICategory } from './category.model';
 
 export interface BookModel {
+	id: number;
 	title: string;
 	image: string;
 	quantity: number;
