@@ -1,7 +1,5 @@
-export enum ORDER {
-  ASC = 'asc',
-  DESC = 'desc',
-}
+import { ORDER } from "../../constants/sort-order.enum";
+
 export default interface BaseQueryCriteria {
   search?: string;
   limit: number;

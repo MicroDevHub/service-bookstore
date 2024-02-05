@@ -6,8 +6,8 @@ import YAML from 'yaml';
 import { checkSchema } from 'express-validator';
 import { NotFoundError, errorHandler, validateRequest } from '@hh-bookstore/common';
 
-import { BookController, CategoryController } from './controllers';
 import DiContainer from './config/inversify.config';
+import { BookController, CategoryController } from './controllers';
 import {
   bookPagingValidation,
   bookGetByIdValidation,
@@ -24,15 +24,14 @@ class App {
 
   constructor() {
     this.express = express();
-    this.routes();
     this.middleware();
+    this.routes();
   }
 
   private middleware(): void {
     this.express.use(express.json() as RequestHandler);
     this.express.use(express.urlencoded({ extended: false }));
     this.express.use(cors());
-    this.express.use(errorHandler);
   }
 
   private routes(): void {
@@ -85,6 +84,7 @@ class App {
     this.express.all('*', () => {
       throw new NotFoundError()
     })
+    this.express.use(errorHandler);
   }
 }
 

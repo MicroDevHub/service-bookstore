@@ -4,7 +4,7 @@ import { IBookService } from '../interfaces/book.interface';
 import { NextFunction, Request, Response } from 'express';
 import { ILogger } from '@hh-bookstore/common';
 import { BookCreateUpdateDto, BookQueryCriteria } from '../models/book.model';
-import { ORDER } from '../models/pagination-model/base-query-criteria';
+import { ORDER } from '../constants/sort-order.enum';
 
 @injectable()
 export class BookController {

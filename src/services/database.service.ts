@@ -11,6 +11,9 @@ export class DatabaseServices {
     @inject(TYPES.ILogger) private logger: ILogger
   ) { }
 
+  /**
+   * @description Check database connection via prismaClient
+   */
   async connection() {
     try {
       await this.prismaClient.$connect();

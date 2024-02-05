@@ -10,6 +10,10 @@ export class CategoryService implements ICategoryService {
     @inject(TYPES.PrismaClient) private prismaClient: PrismaClient,
   ) { }
 	
+  /**
+   * @description Get all categories of book
+   * @returns {Promise<ICategory[]>}
+   */
   async getCategories(): Promise<ICategory[]> {
     const categories = await this.prismaClient.categories.findMany();
 

@@ -13,8 +13,21 @@ import TYPES from '../constants/type';
 
 @injectable()
 export class BookService implements IBookService {
-	constructor(@inject(TYPES.PrismaClient) private prismaClient: PrismaClient) {}
+	constructor(
+		@inject(TYPES.PrismaClient) private prismaClient: PrismaClient,
+	) {}
 
+	/**
+   * @description Get books by Paging
+	 * @param {BookQueryCriteria} query
+	 * @param {string} query.search search book by title
+	 * @param {number} query.limit limit the number of books for response
+	 * @param {number} query.page the page want to get books
+	 * @param {ORDER} query.sortOrder order column data by asc/desc
+	 * @param {string} query.sortColumn column need to sort
+	 * @param {number} query.categoryId get list of books by categoryId
+   * @returns {Promise<PagedResponseModel<BookModel>>}
+   */
 	async getByPaging(
 		query: BookQueryCriteria
 	): Promise<PagedResponseModel<BookModel>> {
@@ -71,6 +84,10 @@ export class BookService implements IBookService {
 		return pagedResponseModel;
 	}
 
+	/**
+   * @description Get all books
+   * @returns {Promise<BookModel[]>}
+   */
 	async get(): Promise<BookModel[]> {
 		const books = await this.prismaClient.books.findMany({
 			include: {
@@ -90,6 +107,11 @@ export class BookService implements IBookService {
 		});
 	}
 
+	/**
+	 * @description Get book by Id
+	 * @param id id of book need to get
+	 * @returns {Promise<BookModel>}
+	 */
 	async getById(id: number): Promise<BookModel> {
 		const book = await this.prismaClient.books.findFirst({
 			include: {
@@ -115,12 +137,18 @@ export class BookService implements IBookService {
 		return bookDto;
 	}
 
+	/**
+	 * @description Create new book
+	 * @param {BookCreateUpdateDto} bookCreateDto book information to create
+	 * @returns {Promise<BookModel>}
+	 */
 	async createBook(bookCreateDto: BookCreateUpdateDto): Promise<BookModel> {
 		const categoryRef = await this.prismaClient.categories.findUnique({
 			where: {
 				id: bookCreateDto.categoryId,
 			},
 		});
+
 		if (!categoryRef) {
 			throw new NotFoundError();
 		}
@@ -151,6 +179,12 @@ export class BookService implements IBookService {
 		return bookDto;
 	}
 
+	/**
+	 * @description Update new book
+	 * @param {number} id id of book need to update
+	 * @param {BookCreateUpdateDto} bookUpdateDto book information to update
+	 * @returns {Promise<BookModel>}
+	 */
 	async updateBook(
 		id: number,
 		bookUpdateDto: BookCreateUpdateDto
@@ -199,6 +233,11 @@ export class BookService implements IBookService {
 		return bookDto;
 	}
 
+	/**
+	 * @description Remove new book
+	 * @param {number} id id of book need to remove
+	 * @returns {Promise<number>}
+	 */
 	async deleteBook(id: number): Promise<number> {
 		const bookUpdate = await this.prismaClient.books.findFirst({
 			where: { id: id },
@@ -208,7 +247,7 @@ export class BookService implements IBookService {
 			throw new NotFoundError();
 		}
 
-		const updatedBook = await this.prismaClient.books.update({
+		const removedBook = await this.prismaClient.books.update({
 			where: { id: id },
 			data: {
 				updated_date: new Date(),
@@ -216,6 +255,6 @@ export class BookService implements IBookService {
 			},
 		});
 
-		return updatedBook.id;
+		return removedBook.id;
 	}
 }
