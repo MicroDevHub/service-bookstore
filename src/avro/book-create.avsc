@@ -1,0 +1,36 @@
+{
+  "name": "bookCreate",
+  "type": "record",
+  "namespace": "bookCreate",
+  "doc": "Book Create Schema",
+  "fields": [
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "image",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "float"
+    },
+    {
+      "name": "price",
+      "type": "float"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "author",
+      "type": "string"
+    },
+    {
+      "name": "categoryId",
+      "type": "float"
+    }
+  ]
+}

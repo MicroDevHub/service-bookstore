@@ -1,0 +1,40 @@
+{
+  "name": "bookUpdate",
+  "type": "record",
+  "namespace": "bookUpdate",
+  "doc": "Book Update Schema",
+  "fields": [
+    {
+      "name": "id",
+      "type": "float"
+    },
+    {
+      "name": "title",
+      "type": "string"
+    },
+    {
+      "name": "image",
+      "type": "string"
+    },
+    {
+      "name": "quantity",
+      "type": "float"
+    },
+    {
+      "name": "price",
+      "type": "float"
+    },
+    {
+      "name": "description",
+      "type": "string"
+    },
+    {
+      "name": "author",
+      "type": "string"
+    },
+    {
+      "name": "categoryId",
+      "type": "float"
+    }
+  ]
+}

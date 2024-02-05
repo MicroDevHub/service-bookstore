@@ -1,0 +1,12 @@
+{
+  "name": "bookDelete",
+  "type": "record",
+  "namespace": "bookDelete",
+  "doc": "Book Delete Schema",
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    }
+  ]
+}

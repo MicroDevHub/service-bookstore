@@ -10,12 +10,18 @@ import { NotFoundError } from '@hh-bookstore/common';
 import { PagedResponseModel } from '../models/pagination-model/paged-response-model';
 import { PageModel } from '../models/pagination-model/paged-model';
 import TYPES from '../constants/type';
+import { ProducerInstance } from '@micro-dev-hub/kafka-event-sourcing';
+import path from 'path';
+import { readAVSCAsync } from '@kafkajs/confluent-schema-registry/';
 
 @injectable()
 export class BookService implements IBookService {
 	constructor(
 		@inject(TYPES.PrismaClient) private prismaClient: PrismaClient,
-	) {}
+		@inject(TYPES.KafkaProducerServices) private kafkaProducer: ProducerInstance
+	) {
+		this.kafkaProducer.connect();
+	}
 
 	/**
    * @description Get books by Paging
@@ -143,6 +149,9 @@ export class BookService implements IBookService {
 	 * @returns {Promise<BookModel>}
 	 */
 	async createBook(bookCreateDto: BookCreateUpdateDto): Promise<BookModel> {
+		const filePath = path.join(__dirname, '../avro/book-create.avsc');
+		const schema = await readAVSCAsync(filePath);
+
 		const categoryRef = await this.prismaClient.categories.findUnique({
 			where: {
 				id: bookCreateDto.categoryId,
@@ -176,6 +185,14 @@ export class BookService implements IBookService {
 			category: categoryRef,
 		};
 
+		this.kafkaProducer.send(
+			{
+				topic: 'bookstore-services',
+				message: { value: bookCreateDto },
+			},
+			JSON.stringify(schema)
+		);
+
 		return bookDto;
 	}
 
@@ -189,6 +206,9 @@ export class BookService implements IBookService {
 		id: number,
 		bookUpdateDto: BookCreateUpdateDto
 	): Promise<BookModel> {
+		const filePath = path.join(__dirname, '../avro/book-update.avsc');
+		const schema = await readAVSCAsync(filePath);
+
 		const bookUpdate = await this.prismaClient.books.findFirst({
 			where: { id: id },
 		});
@@ -230,6 +250,16 @@ export class BookService implements IBookService {
 			category: categoryRef,
 		};
 
+		this.kafkaProducer.send(
+			{
+				topic: 'bookstore-services',
+				message: {
+					value: { id, ...bookUpdateDto },
+				},
+			},
+			JSON.stringify(schema)
+		);
+
 		return bookDto;
 	}
 
@@ -239,6 +269,9 @@ export class BookService implements IBookService {
 	 * @returns {Promise<number>}
 	 */
 	async deleteBook(id: number): Promise<number> {
+		const filePath = path.join(__dirname, '../avro/book-delete.avsc');
+		const schema = await readAVSCAsync(filePath);
+
 		const bookUpdate = await this.prismaClient.books.findFirst({
 			where: { id: id },
 		});
@@ -254,6 +287,16 @@ export class BookService implements IBookService {
 				isDeleted: true,
 			},
 		});
+
+		this.kafkaProducer.send(
+			{
+				topic: 'bookstore-services',
+				message: {
+					value: { id },
+				},
+			},
+			JSON.stringify(schema)
+		);
 
 		return removedBook.id;
 	}
