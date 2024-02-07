@@ -45,7 +45,7 @@ export class BookService implements IBookService {
 
 		const paged = {} as PageModel<BookModel>;
 
-		paged.currentPage = query.page < 0 ? 1 : query.page;
+		paged.currentPage = query.page <= 0 ? 1 : query.page;
 		paged.pageSize = query.limit || 12;
 		paged.totalItems = await this.prismaClient.books.count({
 			where: filter,
@@ -113,7 +113,7 @@ export class BookService implements IBookService {
 	 * @returns {Promise<BookModel>}
 	 */
 	async getById(id: number): Promise<BookModel> {
-		const book = await this.prismaClient.books.findFirst({
+		const book = await this.prismaClient.books.findUnique({
 			include: {
 				categories: true,
 			},
@@ -189,7 +189,7 @@ export class BookService implements IBookService {
 		id: number,
 		bookUpdateDto: BookCreateUpdateDto
 	): Promise<BookModel> {
-		const bookUpdate = await this.prismaClient.books.findFirst({
+		const bookUpdate = await this.prismaClient.books.findUnique({
 			where: { id: id },
 		});
 
@@ -197,7 +197,7 @@ export class BookService implements IBookService {
 			throw new NotFoundError();
 		}
 
-		const categoryRef = await this.prismaClient.categories.findFirst({
+		const categoryRef = await this.prismaClient.categories.findUnique({
 			where: { id: bookUpdateDto.categoryId },
 		});
 
@@ -239,7 +239,7 @@ export class BookService implements IBookService {
 	 * @returns {Promise<number>}
 	 */
 	async deleteBook(id: number): Promise<number> {
-		const bookUpdate = await this.prismaClient.books.findFirst({
+		const bookUpdate = await this.prismaClient.books.findUnique({
 			where: { id: id },
 		});
 
